@@ -1,0 +1,26 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="@string/pref_notifications">
+        <CheckBoxPreference
+            android:key="notification_sound"
+            android:title="@string/pref_disable_sound"
+            android:defaultValue="True"
+            />
+        <CheckBoxPreference
+            android:key="notification_vibrate"
+            android:title="@string/pref_disable_vibrate"
+            android:defaultValue="True"
+            />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/pref_ringer">
+        <CheckBoxPreference
+            android:key="notification_sound"
+            android:title="@string/pref_disable_sound"
+            android:defaultValue="False"
+            />
+        <CheckBoxPreference
+            android:key="notification_vibrate"
+            android:title="@string/pref_disable_vibrate"
+            android:defaultValue="False"
+            />
+    </PreferenceCategory>
+</PreferenceScreen>

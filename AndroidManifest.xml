@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+      package="net.armooo.nightdock"
+      android:versionCode="1"
+      android:versionName="1.0" >
+    <uses-sdk android:minSdkVersion="5"
+        android:targetSdkVersion="5" />
+    <application android:label="@string/app_name">
+        <activity android:name=".NightDockPreferences"
+                  android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <receiver android:name=".DockReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.DOCK_EVENT" />
+            </intent-filter>
+        </receiver>
+    </application>
+</manifest>
