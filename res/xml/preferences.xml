@@ -13,12 +13,12 @@
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/pref_ringer">
         <CheckBoxPreference
-            android:key="notification_sound"
+            android:key="ringer_sound"
             android:title="@string/pref_disable_sound"
             android:defaultValue="False"
             />
         <CheckBoxPreference
-            android:key="notification_vibrate"
+            android:key="ringer_vibrate"
             android:title="@string/pref_disable_vibrate"
             android:defaultValue="False"
             />
