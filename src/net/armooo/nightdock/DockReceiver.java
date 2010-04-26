@@ -23,8 +23,6 @@ public class DockReceiver extends BroadcastReceiver {
     public void onReceive (Context context, Intent intent) {
         ExceptionHandler.register(context);
 
-        audio_mgr.setStreamVolume(AudioManager.STREAM_NOTIFICATION, 0, 0);
-
         prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
         int dock_state = intent.getIntExtra(Intent.EXTRA_DOCK_STATE, -1);
