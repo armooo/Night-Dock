@@ -1,0 +1,8 @@
+Night Dock is a simple program to disable sounds when your phone is docked.
+This way you can get a good night sleep, and still wake up in the morning.
+
+After cloning run "android update project -p . -t android-6" to setup
+local.properties. Then a normal ant debug or ant install will work.
+
+If you are using eclipse I can't help you but there must be some way to import
+it.
