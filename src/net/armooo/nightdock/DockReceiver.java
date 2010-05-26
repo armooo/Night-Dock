@@ -7,6 +7,7 @@ import android.media.AudioManager;
 import android.preference.PreferenceManager;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.provider.Settings;
 
 import com.nullwire.trace.ExceptionHandler;
 
@@ -16,11 +17,14 @@ public class DockReceiver extends BroadcastReceiver {
     private String OLD_NOTIFICATION_VIBRATE = "old_note_vibrate";
     private String OLD_RINGER_VOLUME = "old_ring_volume";
     private String OLD_RINGER_VIBRATE = "old_ring_vibrate";
+    private String OLD_NOTIF_USE_RING = "old_notif_use_ring";
 
     private SharedPreferences prefs;
     private AudioManager audio_mgr;
+    private Context context;
 
     public void onReceive (Context context, Intent intent) {
+        this.context = context;
         ExceptionHandler.register(context);
 
         prefs = PreferenceManager.getDefaultSharedPreferences(context);
@@ -39,6 +43,17 @@ public class DockReceiver extends BroadcastReceiver {
     private void saveSettings() {
         Editor editer = prefs.edit();
 
+        try {
+            editer.putInt(OLD_NOTIF_USE_RING,
+                Settings.System.getInt(
+                    context.getContentResolver(),
+                    "notifications_use_ring_volume"
+                )
+            );
+        } catch (Settings.SettingNotFoundException e) {
+            editer.putInt(OLD_NOTIF_USE_RING, 0);
+        }
+
         editer.putInt(OLD_NOTIFICATION_VOLUME,
             audio_mgr.getStreamVolume(AudioManager.STREAM_NOTIFICATION));
         editer.putInt(OLD_NOTIFICATION_VIBRATE,
@@ -53,6 +68,11 @@ public class DockReceiver extends BroadcastReceiver {
     }
 
     private void updateSettings() {
+        Settings.System.putInt(
+            context.getContentResolver(),
+            "notifications_use_ring_volume",
+            0);
+
         if (getPref("notification_sound")) {
             audio_mgr.setStreamVolume(AudioManager.STREAM_NOTIFICATION, 0, 0);
         }
@@ -71,6 +91,11 @@ public class DockReceiver extends BroadcastReceiver {
     }
 
     private void restoreSettings() {
+        Settings.System.putInt(
+            context.getContentResolver(),
+            "notifications_use_ring_volume",
+            0);
+
         if (getPref("notification_sound")) {
             audio_mgr.setStreamVolume(AudioManager.STREAM_NOTIFICATION,
                 prefs.getInt(OLD_NOTIFICATION_VOLUME, 0), 0);
@@ -89,12 +114,20 @@ public class DockReceiver extends BroadcastReceiver {
                 prefs.getInt(OLD_RINGER_VIBRATE, 0));
         }
 
+        Settings.System.putInt(
+            context.getContentResolver(),
+            "notifications_use_ring_volume",
+            prefs.getInt(OLD_NOTIF_USE_RING, 0)
+        );
+
         Editor editer = prefs.edit();
         editer.remove(OLD_NOTIFICATION_VOLUME);
         editer.remove(OLD_NOTIFICATION_VIBRATE);
 
         editer.remove(OLD_RINGER_VOLUME);
         editer.remove(OLD_RINGER_VIBRATE);
+
+        editer.remove(OLD_NOTIF_USE_RING);
         editer.commit();
     }
 
