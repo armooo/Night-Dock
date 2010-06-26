@@ -8,10 +8,13 @@ import android.preference.PreferenceManager;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.provider.Settings;
+import android.util.Log;
 
 import com.nullwire.trace.ExceptionHandler;
 
 public class DockReceiver extends BroadcastReceiver {
+
+    private static final String TAG = "DockReceiver";
 
     private String OLD_NOTIFICATION_VOLUME = "old_note_volume";
     private String OLD_NOTIFICATION_VIBRATE = "old_note_vibrate";
@@ -27,10 +30,13 @@ public class DockReceiver extends BroadcastReceiver {
         this.context = context;
         ExceptionHandler.register(context);
 
+        Log.v(TAG, "got intent");
+
         prefs = PreferenceManager.getDefaultSharedPreferences(context);
 
         int dock_state = intent.getIntExtra(Intent.EXTRA_DOCK_STATE, -1);
         if (dock_state == Intent.EXTRA_DOCK_STATE_DESK) {
+            Log.v(TAG, "in a desk dock");
             audio_mgr = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
             saveSettings();
             updateSettings();
@@ -39,18 +45,22 @@ public class DockReceiver extends BroadcastReceiver {
             editer.commit();
 
         } else if (dock_state == Intent.EXTRA_DOCK_STATE_UNDOCKED){
+            Log.v(TAG, "undocking");
             if (getPref("docked")){
+                Log.v(TAG, "puting setting back");
                 audio_mgr = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
                 restoreSettings();
                 Editor editer = prefs.edit();
                 editer.putBoolean("docked", false);
                 editer.commit();
             } else {
+                Log.v(TAG, "not puting setting back");
             }
         }
     }
 
     private void saveSettings() {
+        Log.v(TAG, "saving settings");
         Editor editer = prefs.edit();
 
         try {
@@ -78,6 +88,7 @@ public class DockReceiver extends BroadcastReceiver {
     }
 
     private void updateSettings() {
+        Log.v(TAG, "seting dock settings");
         Settings.System.putInt(
             context.getContentResolver(),
             "notifications_use_ring_volume",
@@ -101,6 +112,8 @@ public class DockReceiver extends BroadcastReceiver {
     }
 
     private void restoreSettings() {
+        Log.v(TAG, "puting settings back");
+
         Settings.System.putInt(
             context.getContentResolver(),
             "notifications_use_ring_volume",
