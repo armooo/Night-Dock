@@ -34,9 +34,19 @@ public class DockReceiver extends BroadcastReceiver {
             audio_mgr = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
             saveSettings();
             updateSettings();
+            Editor editer = prefs.edit();
+            editer.putBoolean("docked", true);
+            editer.commit();
+
         } else if (dock_state == Intent.EXTRA_DOCK_STATE_UNDOCKED){
-            audio_mgr = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
-            restoreSettings();
+            if (getPref("docked")){
+                audio_mgr = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+                restoreSettings();
+                Editor editer = prefs.edit();
+                editer.putBoolean("docked", false);
+                editer.commit();
+            } else {
+            }
         }
     }
 
