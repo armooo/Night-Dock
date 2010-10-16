@@ -10,6 +10,11 @@
             android:title="@string/pref_disable_vibrate"
             android:defaultValue="True"
             />
+        <CheckBoxPreference
+            android:key="notification_led"
+            android:title="@string/pref_disable_led"
+            android:defaultValue="False"
+            />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/pref_ringer">
         <CheckBoxPreference

@@ -21,6 +21,7 @@ public class DockReceiver extends BroadcastReceiver {
     private String OLD_RINGER_VOLUME = "old_ring_volume";
     private String OLD_RINGER_VIBRATE = "old_ring_vibrate";
     private String OLD_NOTIF_USE_RING = "old_notif_use_ring";
+    private String OLD_NOTIF_LED = "old_notif_led";
 
     private SharedPreferences prefs;
     private AudioManager audio_mgr;
@@ -74,6 +75,17 @@ public class DockReceiver extends BroadcastReceiver {
             editer.putInt(OLD_NOTIF_USE_RING, 0);
         }
 
+        try {
+            editer.putInt(OLD_NOTIF_LED,
+                Settings.System.getInt(
+                    context.getContentResolver(),
+                    "notification_light_pulse"
+                )
+            );
+        } catch (Settings.SettingNotFoundException e) {
+            editer.putInt(OLD_NOTIF_LED, 1);
+        }
+
         editer.putInt(OLD_NOTIFICATION_VOLUME,
             audio_mgr.getStreamVolume(AudioManager.STREAM_NOTIFICATION));
         editer.putInt(OLD_NOTIFICATION_VIBRATE,
@@ -93,6 +105,13 @@ public class DockReceiver extends BroadcastReceiver {
             context.getContentResolver(),
             "notifications_use_ring_volume",
             0);
+
+        if (getPref("notification_led")) {
+            Settings.System.putInt(
+                context.getContentResolver(),
+                "notification_light_pulse",
+                0);
+        }
 
         if (getPref("notification_sound")) {
             audio_mgr.setStreamVolume(AudioManager.STREAM_NOTIFICATION, 0, 0);
@@ -114,10 +133,12 @@ public class DockReceiver extends BroadcastReceiver {
     private void restoreSettings() {
         Log.v(TAG, "puting settings back");
 
-        Settings.System.putInt(
-            context.getContentResolver(),
-            "notifications_use_ring_volume",
-            0);
+        if (getPref("notification_led")) {
+            Settings.System.putInt(
+                context.getContentResolver(),
+                "notification_light_pulse",
+                prefs.getInt(OLD_NOTIF_LED, 1));
+        }
 
         if (getPref("notification_sound")) {
             audio_mgr.setStreamVolume(AudioManager.STREAM_NOTIFICATION,

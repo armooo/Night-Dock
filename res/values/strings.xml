@@ -5,4 +5,5 @@
     <string name="pref_ringer">Ringer</string>
     <string name="pref_disable_sound">Disable Sound</string>
     <string name="pref_disable_vibrate">Disable Vibrate</string>
+    <string name="pref_disable_led">Disable LED</string>
 </resources>
